@@ -157,3 +157,69 @@ for (let i = 0; i < navigationLinks.length; i++) {
 
   });
 }
+document.getElementById('sendMessage').addEventListener('click', function() {
+  var fullName = document.getElementById('fullName').value;
+  var emailAddress = document.getElementById('emailAddress').value;
+  var message = document.getElementById('message').value;
+
+  if (fullName && emailAddress && message) {
+      var templateParams = {
+          full_name: fullName,
+          email_address: emailAddress,
+          message: message
+      };
+
+      emailjs.send('service_gcrx43j', 'template_g1743hi', templateParams)
+          .then(function(response) {
+              console.log('SUCCESS!', response.status, response.text);
+              alert('Thank you for contacting us, ' + fullName + '! We will get back to you shortly.');
+          }, function(error) {
+              console.log('FAILED...', error);
+              alert('Failed to send message. Please try again later.');
+          });
+  } else {
+      alert('Please fill in all fields.');
+  }
+});
+document.addEventListener('DOMContentLoaded', function() {
+  var form = document.getElementById('contactForm');
+  var formButton = document.getElementById('formButton');
+
+  var inputs = form.querySelectorAll('[data-form-input]');
+  inputs.forEach(function(input) {
+      input.addEventListener('input', function() {
+          var allFilled = true;
+          inputs.forEach(function(input) {
+              if (!input.value) {
+                  allFilled = false;
+              }
+          });
+          formButton.disabled = !allFilled;
+      });
+  });
+
+  form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      var fullName = form.querySelector('input[name="fullname"]').value;
+      var emailAddress = form.querySelector('input[name="email"]').value;
+      var message = form.querySelector('textarea[name="message"]').value;
+
+      var templateParams = {
+          full_name: fullName,
+          email_address: emailAddress,
+          message: message
+      };
+
+      emailjs.send('service_gcrx43j', 'template_g1743hi', templateParams)
+          .then(function(response) {
+              console.log('SUCCESS!', response.status, response.text);
+              alert('Thank you for contacting us, ' + fullName + '! We will get back to you shortly.');
+              form.reset();
+              formButton.disabled = true;
+          }, function(error) {
+              console.log('FAILED...', error);
+              alert('Failed to send message. Please try again later.');
+          });
+  });
+});
